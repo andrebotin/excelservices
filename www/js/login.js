@@ -37,7 +37,7 @@ $(document).ready(function(e){
 
 /* FUNÇÃO QUE VALIDA O LOGIN */
 
-function validaLogin(){
+function validaLogin(){ /*
 	$("#fundoTransparente").css('display','block'); //exibe o fundo transparente
 	$("#imgEspera").css('display','block'); 	//exibe a imagem de espera
 	if ($("#login").val() == "" || $("#senha").val() == ""){
@@ -73,8 +73,24 @@ function validaLogin(){
 				}
 			}
 		}
-		xhr.open('POST', 'http://localhost/sistema/mvc/controler/login.php', true);
+		xhr.open('POST', '../../mvc/controler/login.php', true);
 		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   		xhr.send('login=' + $('#login').val() + '&senha=' + $("#senha").val()); //envia o FormData ao servidor 
 	} 
+	*/
+alert('certo');
+	jQuery.ajax({
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler/login3.php',
+	  dataType: 'jsonp',
+	  crossDomain: true,
+	  jsonp: false,
+	  jsonpCallback: 'callback',
+	  success: function(d) {
+		alert(d[1].nome);
+	  },
+	  error: function(d) {
+		alert(-1);
+	  }
+	});
+
 }
