@@ -1,3 +1,17 @@
+document.addEventListener("deviceready", exibirInfo, false);  
+$("#saida").append( 'Device Name: '     + device.name     + 
+						'Device PhoneGap: ' + device.phonegap + 
+						'Device Platform: ' + device.platform + 
+						'Device UUID: '     + device.uuid     + 
+						'Device Version: '  + device.version);
+function vibrar() {  
+	navigator.notification.alert("Vibrando",  
+		"Funcionou?",  
+		"OK");  
+  
+	 navigator.notification.vibrate(2000);  
+} 
+
 $(document).ready(function(e){  
 
 /* DEFININDO AS MÁSCARAS PARA OS CAMPOS DO FORMULÁRIO */
