@@ -37,60 +37,23 @@ $(document).ready(function(e){
 
 /* FUNÇÃO QUE VALIDA O LOGIN */
 
-function validaLogin(){ /*
-	$("#fundoTransparente").css('display','block'); //exibe o fundo transparente
-	$("#imgEspera").css('display','block'); 	//exibe a imagem de espera
-	if ($("#login").val() == "" || $("#senha").val() == ""){
-		$("#imgEspera").css('display','none'); 	//esconde a imagem de espera
-		$('#avisoErroLogin1').css("display", 'block'); 	//exibe o aviso
-	}
-	else { 
-		xhr = new XMLHttpRequest();
-		xhr.onreadystatechange = function() { 
-			if (xhr.readyState==4 && xhr.status==200){alert(xhr.responseText);
-				if (xhr.responseText == "ok") {
-					$("#imgEspera").css('display','none'); 	//esconde a imagem de espera
-					$("#fundoTransparente").css('display','none'); //esconde o fundo transparente
-					window.location='principal.html';
-				}
-				else if (xhr.responseText == "alterarSenha") {
-					$("#imgEspera").css('display','none'); 	//esconde a imagem de espera
-					$('#avisoAlterarSenha').css("display", 'block'); 	//exibe o aviso
-				}
-				else if (xhr.responseText == "erroConexao") {
-					$("#imgEspera").css('display','none'); 	//esconde a imagem de espera
-					$('#fundoTransparente').css('display','none');
-					window.location="mvc/view/erros/erro1.html";
-				}
-				else if (xhr.responseText == "erroSelecao") {
-					$("#imgEspera").css('display','none'); 	//esconde a imagem de espera
-					$('#fundoTransparente').css('display','none');
-					window.location="mvc/view/erros/erro2.html";
-				}
-				else {
-					$("#imgEspera").css('display','none'); 	//esconde a imagem de espera
-					$('#avisoErroLogin2').css("display", 'block'); 	//exibe o aviso
-				}
-			}
-		}
-		xhr.open('POST', '../../mvc/controler/login.php', true);
-		xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  		xhr.send('login=' + $('#login').val() + '&senha=' + $("#senha").val()); //envia o FormData ao servidor 
-	} 
-	*/
-alert('certo');
+function validaLogin(){ 
+    $.mobile.loadingMessage = "Carregando";
+	$.mobile.showPageLoadingMsg();
 	jQuery.ajax({
-	  url: 'http://www.excelservices.com.br/sistema/mvc/controler/login3.php',
+	  type: 'POST',
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/login.php',
+	  data: {login: $('#login').val(), senha: $("#senha").val() },
 	  dataType: 'jsonp',
 	  crossDomain: true,
 	  jsonp: false,
 	  jsonpCallback: 'callback',
 	  success: function(d) {
-		alert(d[1].nome);
+		  $.mobile.hidePageLoadingMsg();
+		  window.location = 'principal.html';
 	  },
 	  error: function(d) {
 		alert(-1);
 	  }
 	});
-
 }
