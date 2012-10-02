@@ -38,8 +38,6 @@ $(document).ready(function(e){
 /* FUNÇÃO QUE VALIDA O LOGIN */
 
 function validaLogin(){ 
-    $.mobile.loadingMessage = "Carregando";
-	$.mobile.showPageLoadingMsg();
 	jQuery.ajax({
 	  type: 'POST',
 	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/login.php',
@@ -49,7 +47,6 @@ function validaLogin(){
 	  jsonp: false,
 	  jsonpCallback: 'callback',
 	  success: function(d) {
-		  $.mobile.hidePageLoadingMsg();
 		  window.location = 'principal.html';
 	  },
 	  error: function(d) {
