@@ -1,11 +1,23 @@
 document.addEventListener("deviceready", exibirInfo, false);  
-$("#saida").append( 'Device Name: '     + device.name     + 
+function exibirInfo() {  
+	$("#saida").append( 'Device Name: '     + device.name     + 
 						'Device PhoneGap: ' + device.phonegap + 
 						'Device Platform: ' + device.platform + 
 						'Device UUID: '     + device.uuid     + 
 						'Device Version: '  + device.version);
+}
+
+function exibirInfo2() {  
+	$("#saida").append( 'Device Names: '     + device.name     + 
+						'Device PhoneGaps: ' + device.phonegap + 
+						'Device Platforms: ' + device.platform + 
+						'Device UUIDs: '     + device.uuid     + 
+						'Device Versions: '  + device.version);
+} 
+
 function vibrar() {  
-	navigator.notification.alert("Vibrando",  
+	navigator.notification.alert("Vibrando",
+		exibirInfo2,  
 		"Funcionou?",  
 		"OK");  
   
