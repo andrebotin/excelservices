@@ -1,0 +1,9 @@
+#cabecalho {
+	position:fixed;
+	z-index:100;
+}
+#menu {
+	position:fixed;
+	bottom:0px;
+	z-index:100;
+}
