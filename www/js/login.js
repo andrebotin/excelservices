@@ -37,12 +37,12 @@ function validaLogin(){
 		  crossDomain: true,
 		  jsonp: false,
 		  jsonpCallback: 'callback',
-		  success: function(d) { alert(d[0].resposta);
+		  success: function(d) {
 			  $.mobile.hidePageLoadingMsg();
-			  if(d[0].resposta == 'administrador'){ alert('Administrador.');
+			  if(d[0].resposta == 'administrador'){
 				  window.location = 'principal.html';
 			  }
-			  else if(d[0].resposta == 'usuario_excel'){ alert('Usuario.');
+			  else if(d[0].resposta == 'usuario_excel'){
 				  window.location = 'principal2.html';
 			  }
 			  else if(d[0].resposta == 'erroConexao'){
@@ -51,7 +51,7 @@ function validaLogin(){
 			  else if(d[0].resposta == 'erroSelecao'){
 				  navigator.notification.alert("Erro ao selecionar o banco de dados.", '',  "Erro", "OK");
 			  }
-			  else{ alert('Login ou senha incorreta.');
+			  else{
 				  navigator.notification.alert("Login ou senha incorreta.", '',  "Erro", "OK");
 			  }
 		  }
