@@ -28,7 +28,6 @@ $(document).ready(function(e){
 
 function validaLogin(){ 
 	if($('#login').val() != '' && $("#senha").val() != ''){
-		$.mobile.loadingMessage = "Carregando";
 		$.mobile.showPageLoadingMsg();
 		jQuery.ajax({
 		  type: 'POST',
@@ -38,12 +37,12 @@ function validaLogin(){
 		  crossDomain: true,
 		  jsonp: false,
 		  jsonpCallback: 'callback',
-		  success: function(d) {
+		  success: function(d) { alert(d[0].resposta);
 			  $.mobile.hidePageLoadingMsg();
-			  if(d[0].resposta == 'administrador'){
+			  if(d[0].resposta == 'administrador'){ alert('Administrador.');
 				  window.location = 'principal.html';
 			  }
-			  else if(d[0].resposta == 'usuario_excel'){
+			  else if(d[0].resposta == 'usuario_excel'){ alert('Usuario.');
 				  window.location = 'principal2.html';
 			  }
 			  else if(d[0].resposta == 'erroConexao'){
@@ -52,7 +51,7 @@ function validaLogin(){
 			  else if(d[0].resposta == 'erroSelecao'){
 				  navigator.notification.alert("Erro ao selecionar o banco de dados.", '',  "Erro", "OK");
 			  }
-			  else{
+			  else{ alert('Login ou senha incorreta.');
 				  navigator.notification.alert("Login ou senha incorreta.", '',  "Erro", "OK");
 			  }
 		  }

@@ -20,20 +20,22 @@
   <div id="cabecalho" data-role="header" data-theme="b">
     <img src="img/logo.png" style="position:absolute; left:2px; top:2px"/>
     <h1 style="font-style:italic">Colaboradores 2</h1>
+    <div style="position:absolute; right:7px; top:7px">
+      <a href="#" data-role="button" data-icon="back" data-iconpos="notext">Button</a>
+      <a href="#" data-role="button" data-icon="check" data-iconpos="notext">Button</a>
+    </div>
   </div>
   
-  <div data-role="content" data-theme="c" style="position:relative; top:45px">
+  <div data-role="content" data-theme="c" style="position:relative; top:45px" align="center">
     <div data-role="fieldcontain">
       <select name="tipo" id="tipo">
         <option value="Todos" selected="selected">Todos colaboradores</option>
         <option value="Não escalado">Escalar colaboradores</option>
-        <option value="option3">Option 3</option>
+        <option value="Escalado">Colaboradores escalados</option>
       </select>
-    </div>
-    <div data-role="fieldcontain">
+
       <input type="text" name="data" id="data" value="Data..."  />
-    </div>
-    <div data-role="fieldcontain">
+
       <select name="horario" id="horario">
         <option value="" selected="selected">Horário...</option>
         <option value="00:00">00:00</option>
@@ -85,11 +87,9 @@
         <option value="23:00">23:00</option>
         <option value="23:30">23:30</option>
       </select>
-    </div>
-    <div data-role="fieldcontain">
+
       <input type="text" name="nome" id="nome" value="Nome..."  />
-    </div>
-    <div data-role="fieldcontain">
+
       <select name="funcao" id="funcao">
         <option value="" selected="selected">Função...</option>
         <option value="Arrumadeira">Arrumadeira</option>
@@ -107,22 +107,19 @@
         <option value="Repositor">Repositor</option>
         <option value="Steward">Steward</option>
       </select>
-    </div>
-    <div data-role="fieldcontain">
+
       <select name="carro" id="carro">
         <option value="" selected="selected">Tem carro?</option>
 	    <option value="SIM">SIM</option>
 	    <option value="NÃO">NÃO</option>
       </select>
-    </div>
-    <div data-role="fieldcontain">
+
       <select name="sexo" id="sexo">
         <option value="" selected="selected">Tem carro?</option>
 	    <option value="SIM">SIM</option>
 	    <option value="NÃO">NÃO</option>
       </select>
-    </div>
-    <div data-role="fieldcontain">
+
       <select name="pont" id="pont">
         <option value="" selected="selected">Pontuação...</option>
         <option value="5">5</option>
@@ -135,11 +132,11 @@
     <p>&nbsp;</p>
   </div>
   
-  <div id="menu"  data-role="footer" data-theme="b">
-	<a href="colaboradores2.html"><img src="img/menu/colaborador.png" width="48" height="48"/></a>
-    <a href="relatorios2.html"><img src="img/menu/relatorio.png" width="48" height="48"/></a>
-    <a href="configuracoes2.html"><img src="img/menu/config.png" width="48" height="48"/></a>
-    <a href="#" onclick="sair()"><img src="img/menu/sair.png" width="48" height="48"/></a>
+  <div id="menu"  data-role="footer" data-theme="b" align="center">
+	<a href="colaboradores2.html"><img src="img/menu/colaborador.png" width="40" height="40"/></a>
+    <a href="relatorios2.html"><img src="img/menu/relatorio.png" width="40" height="40"/></a>
+    <a href="configuracoes2.html"><img src="img/menu/config.png" width="40" height="40"/></a>
+    <a href="#" onclick="sair()"><img src="img/menu/sair.png" width="40" height="40"/></a>
   </div>
 </div>
 </body>
