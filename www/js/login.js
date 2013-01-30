@@ -36,7 +36,7 @@ $(document).ready(function(e){
 
 function validaLogin(){
 	if($('#login').val() != '' && $("#senha").val() != ''){
-		$.mobile.showPageLoadingMsg();
+		//$.mobile.showPageLoadingMsg();
 		ExibeCarregando();
 		jQuery.ajax({
 		  type: 'POST',
