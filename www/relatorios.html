@@ -18,66 +18,100 @@
 <div id="page" data-role="page" data-theme="b">
 
   <div id="cabecalho" data-role="header" data-theme="b">
-    <img src="img/logo.png" style="position:absolute; left:2px; top:2px"/>
-    <h1 style="font-style:italic">Relatórios</h1>
-    <div style="position:absolute; right:7px; top:7px">
-      <a href="#" data-role="button" data-icon="back" data-iconpos="notext">Button</a>
-      <a href="#" data-role="button" data-icon="check" data-iconpos="notext">Button</a>
+    <img src="img/logo.png" style="position:absolute; left:50%; margin-left:-32px; top:2px"/>
+    <h1 style="font-style:italic">&nbsp;</h1>
+    <a href="#" onclick="voltar()" data-role="button" data-icon="back" data-iconpos="left">Voltar</a>
+    <a href="#" onclick="gerar()" data-role="button" data-icon="check" data-iconpos="left">Gerar</a>
+  </div>
+  
+  <div style="position:relative; top:45px" data-role="content" data-theme="c">
+    <div id="filtro">
+      <table border="1" class="campos">
+        <tr>
+          <td style="padding:5px">
+            <label>Tipo de relatório:<br/>
+              <select name="tipo" id="tipo">
+                <option value="" selected="selected"></option>
+                <option value="confirm">Confirmação de extras</option>
+                <option value="colab">Relatório por colaborador</option>
+                <option value="funcao">Relatório por função</option>
+                <option value="set">Relatório por setor</option>
+                <option value="geral">Relatório geral</option>
+              </select>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px" id="tabelaFuncao">
+            <label>Função:<br/>
+              <select name="funcao" id="funcao">
+                <option value="" selected="selected"></option>
+                <option value="Arrumadeira">Arrumadeira</option>
+                <option value="Auxiliar de cozinha">Auxiliar de cozinha</option>
+                <option value="Auxiliar de eventos">Auxiliar de eventos</option>
+                <option value="Auxiliar de servicos gerais">Auxiliar de serviços gerais</option>
+                <option value="Confeiteiro">Confeiteiro</option>
+                <option value="Cozinheiro">Cozinheiro</option>
+                <option value="Garcom">Garçom</option>
+                <option value="Garcom exclusivo">Garçom exclusivo</option>
+                <option value="Hostess">Hostess</option>
+                <option value="Maitre">Maitre</option>
+                <option value="Mensageiro">Mensageiro</option>
+                <option value="Recepcionista">Recepcionista</option>
+                <option value="Repositor">Repositor</option>
+                <option value="Steward">Steward</option>
+              </select>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px" id="tabelaNome">
+            <label>Nome:<br/>
+              <select name="nome" id="nome"></select>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px" id="tabelaSetor">
+            <label>Setor:<br/>
+              <select name="setor" id="setor"></select>
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px" id="tabelaData">
+            <label>Data:<br/>
+              <input type="text" name="data" id="data" value="" style="text-align:center" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px" id="tabelaInicio">
+            <label>Data inicial:<br/>
+              <input type="text" name="inicio" id="inicio" value="" style="text-align:center" />
+            </label>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:5px" id="tabelaFim">
+            <label>Data final:<br/>
+              <input type="text" name="fim" id="fim" value="" style="text-align:center" />
+            </label>
+          </td>
+        </tr>
+      </table>
+      <p>&nbsp;</p>
+    </div>
+    
+    <div id="resultado" style="display:none">
+      <table border="1" class="campos">
+      </table>
+      <p>&nbsp;</p>
     </div>
   </div>
   
-  <div data-role="content" data-theme="c" style="position:relative; top:45px" align="center">
-    <div data-role="fieldcontain">
-      <select name="tipo" id="tipo">
-        <option value="" selected="selected">Tipo de relatório...</option>
-        <option value="confirm">Confirmação de extras</option>
-        <option value="ponto">Folha de ponto</option>
-        <option value="colab">Relatório por colaborador</option>
-        <option value="funcao">Relatório por função</option>
-        <option value="set">Relatório por setor</option>
-        <option value="geral">Relatório geral</option>
-      </select>
-
-      <select name="tipoFolhaPonto" id="tipoFolhaPonto">
-        <option value="geral" selected="selected">Folha de ponto geral</option>
-        <option value="funcao">Folha de ponto por função</option>
-      </select>
-
-      <select name="funcao" id="funcao">
-        <option value="" selected="selected">Função...</option>
-        <option value="Arrumadeira">Arrumadeira</option>
-        <option value="Auxiliar de cozinha">Auxiliar de cozinha</option>
-        <option value="Auxiliar de eventos">Auxiliar de eventos</option>
-        <option value="Auxiliar de servicos gerais">Auxiliar de serviços gerais</option>
-        <option value="Confeiteiro">Confeiteiro</option>
-        <option value="Cozinheiro">Cozinheiro</option>
-        <option value="Garcom">Garçom</option>
-        <option value="Garcom exclusivo">Garçom exclusivo</option>
-        <option value="Hostess">Hostess</option>
-        <option value="Maitre">Maitre</option>
-        <option value="Mensageiro">Mensageiro</option>
-        <option value="Recepcionista">Recepcionista</option>
-        <option value="Repositor">Repositor</option>
-        <option value="Steward">Steward</option>
-      </select>
-
-      <select name="nome" id="nome">
-      </select>
-
-      <select name="setor" id="setor">
-      </select>
-
-      <input type="text" name="data" id="data" value="Data..."  />
-
-      <input type="text" name="inicio" id="inicio" value="Data inicial..."  />
-
-      <input type="text" name="fim" id="fim" value="Data final..."  />
-    </div>
-    <p>&nbsp;</p>
-    <p>&nbsp;</p>
-  </div>
-  
-  <div id="menu"  data-role="footer" data-theme="b" align="center">
+  <div id="menu" data-role="footer" data-theme="b" align="center">
+    <a href="colaboradores2.html"><img src="img/menu/cadastro.png" width="40" height="40"/></a>
 	<a href="colaboradores.html"><img src="img/menu/colaborador.png" width="40" height="40"/></a>
     <a href="relatorios.html"><img src="img/menu/relatorio.png" width="40" height="40"/></a>
     <a href="pontuacao.html"><img src="img/menu/pontuacao.png" width="40" height="40"/></a>

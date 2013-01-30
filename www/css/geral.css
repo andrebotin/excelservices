@@ -2,6 +2,15 @@
 	position:fixed;
 	z-index:100;
 }
+.campos {
+	width:100%;
+	border: thin solid #848283;
+	background-color:#FFF;
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 15px;
+	color: #000;
+	border-collapse:collapse;
+}
 #menu {
 	position:fixed;
 	bottom:0px;

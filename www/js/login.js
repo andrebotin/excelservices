@@ -15,7 +15,15 @@ function vibrar() {
 		"OK");  
   
 	 navigator.notification.vibrate(2000);  
-} 
+}
+
+function ExibeCarregando() {   
+	navigator.splashscreen.show(); 
+}
+
+function EscondeCarregando() {   
+	navigator.splashscreen.hide(); 
+}
 
 $(document).ready(function(e){  
 
@@ -26,19 +34,21 @@ $(document).ready(function(e){
 
 /* FUNÇÃO QUE VALIDA O LOGIN */
 
-function validaLogin(){ 
+function validaLogin(){
 	if($('#login').val() != '' && $("#senha").val() != ''){
-		$.mobile.showPageLoadingMsg();
+		//$.mobile.showPageLoadingMsg();
+		ExibeCarregando();
 		jQuery.ajax({
 		  type: 'POST',
-		  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/login.php',
+		  url: 'http://localhost/sistema/mvc/controler-mobile/login.php',
 		  data: {login: $('#login').val(), senha: $("#senha").val() },
 		  dataType: 'jsonp',
 		  crossDomain: true,
 		  jsonp: false,
 		  jsonpCallback: 'callback',
 		  success: function(d) {
-			  $.mobile.hidePageLoadingMsg();
+			  //$.mobile.hidePageLoadingMsg();
+			  EscondeCarregando();
 			  if(d[0].resposta == 'administrador'){
 				  window.location = 'principal.html';
 			  }
