@@ -16,4 +16,6 @@ App mobile da Excel Services.
 Andre Botin
 </author>
 
+<plugin name="SplashScreen" value="org.apache.cordova.SplashScreen"/>
+
 </widget>

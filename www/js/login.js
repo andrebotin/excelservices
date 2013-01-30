@@ -18,11 +18,11 @@ function vibrar() {
 }
 
 function ExibeCarregando() {  
-	//navigator.splashscreen.show(); 
+	navigator.splashscreen.show(); 
 }
 
 function EscondeCarregando() {   
-	//navigator.splashscreen.hide(); 
+	navigator.splashscreen.hide(); 
 }
 
 $(document).ready(function(e){  
@@ -40,7 +40,7 @@ function validaLogin(){
 		ExibeCarregando();
 		jQuery.ajax({
 		  type: 'POST',
-		  url: 'http://localhost/sistema/mvc/controler-mobile/login.php',
+		  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/login.php',
 		  data: {login: $('#login').val(), senha: $("#senha").val() },
 		  dataType: 'jsonp',
 		  crossDomain: true,
