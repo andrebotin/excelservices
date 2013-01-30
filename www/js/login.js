@@ -38,6 +38,7 @@ function validaLogin(){
 	if($('#login').val() != '' && $("#senha").val() != ''){
 		//$.mobile.showPageLoadingMsg();
 		//ExibeCarregando();
+		
 		jQuery.ajax({
 		  type: 'POST',
 		  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/login.php',
@@ -46,9 +47,10 @@ function validaLogin(){
 		  crossDomain: true,
 		  jsonp: false,
 		  jsonpCallback: 'callback',
-		  success: function(d) { navigator.notification.alert("Informe o login e a senha.", '',  "Erro", "OK");
+		  success: function(d) { //navigator.notification.alert("Informe o login e a senha.", '',  "Erro", "OK");
 			  //$.mobile.hidePageLoadingMsg();
-			  EscondeCarregando();
+			  alert(3);
+			  //EscondeCarregando();
 			  if(d[0].resposta == 'administrador'){
 				  window.location = 'principal.html';
 			  }
@@ -67,7 +69,7 @@ function validaLogin(){
 		  }
 		});
 	}
-	else{
+	else{ 
 		navigator.notification.alert("Informe o login e a senha.", '',  "Erro", "OK");
 	}
 }
