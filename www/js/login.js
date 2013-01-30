@@ -18,11 +18,11 @@ function vibrar() {
 }
 
 function ExibeCarregando() {  
-	navigator.splashscreen.show(); 
+	//navigator.splashscreen.show(); 
 }
 
 function EscondeCarregando() {   
-	navigator.splashscreen.hide(); 
+	//navigator.splashscreen.hide(); 
 }
 
 $(document).ready(function(e){  
