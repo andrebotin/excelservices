@@ -17,7 +17,7 @@ function vibrar() {
 	 navigator.notification.vibrate(2000);  
 }
 
-function ExibeCarregando() {   
+function ExibeCarregando() {  
 	navigator.splashscreen.show(); 
 }
 
@@ -36,7 +36,7 @@ $(document).ready(function(e){
 
 function validaLogin(){
 	if($('#login').val() != '' && $("#senha").val() != ''){
-		//$.mobile.showPageLoadingMsg();
+		$.mobile.showPageLoadingMsg();
 		ExibeCarregando();
 		jQuery.ajax({
 		  type: 'POST',
