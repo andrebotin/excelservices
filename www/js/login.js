@@ -49,7 +49,6 @@ function validaLogin(){
 		  jsonpCallback: 'callback',
 		  success: function(d) { //navigator.notification.alert("Informe o login e a senha.", '',  "Erro", "OK");
 			  //$.mobile.hidePageLoadingMsg();
-			  alert(3);
 			  //EscondeCarregando();
 			  if(d[0].resposta == 'administrador'){
 				  window.location = 'principal.html';

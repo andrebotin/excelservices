@@ -1,0 +1,59 @@
+@charset "utf-8";
+#tituloRelatorio {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 34px;
+	color: #000;
+	font-style:italic;
+	display:block;
+}
+#tituloRelatorio2 {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 22px;
+	color: #000;
+	font-style:italic;
+	display:block;
+}
+#nomeRelatorio {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 16px;
+	color: #000;
+	font-style:italic;
+	display:block;
+}
+#funcaoRelatorio {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 22px;
+	color: #000;
+	font-style:italic;
+	display:block;
+}
+#cpfRelatorio {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 16px;
+	color: #000;
+	font-style:italic;
+	display:block;
+}
+#dataRelatorio {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 22px;
+	color: #000;
+	font-style:italic;
+	display:block;
+}
+table.relatorios {
+	font-family: Verdana, Geneva, sans-serif;
+	font-size: 15px;
+	border-collapse:collapse;
+}
+table.relatorios tr td {
+	border:1px solid #000;
+}
+#tabelaRelatorio a{
+	text-decoration:underline;
+	color:#00F;
+}
+a{
+	text-decoration:none;
+	color:#000;
+}
