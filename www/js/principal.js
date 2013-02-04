@@ -7,7 +7,27 @@ function exibirInfo() {  /*
 						'Device Version: '  + device.version); */
 }
 
-/* FUNÇÃO QUE FECHA  */
+/* FUNÇÕES DE NAVEGAÇÃO DO MENU  */
+
+function colaboradores2(){
+	window.location = 'colaboradores2.html';
+}
+
+function colaboradores(){
+	window.location = 'colaboradores.html';
+}
+
+function relatorios(){
+	window.location = 'relatorios.html';
+}
+
+function pontuacao(){
+	window.location = 'pontuacao.html';
+}
+
+function configuracoes(){
+	window.location = 'configuracoes.html';
+}
 
 function sair(){
 	navigator.app.exitApp();

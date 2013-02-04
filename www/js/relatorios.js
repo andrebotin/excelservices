@@ -22,6 +22,28 @@ function voltar(){
 	}
 }
 
+/* FUNÇÕES DE NAVEGAÇÃO DO MENU  */
+
+function colaboradores2(){
+	window.location = 'colaboradores2.html';
+}
+
+function colaboradores(){
+	window.location = 'colaboradores.html';
+}
+
+function relatorios(){
+	window.location = 'relatorios.html';
+}
+
+function pontuacao(){
+	window.location = 'pontuacao.html';
+}
+
+function configuracoes(){
+	window.location = 'configuracoes.html';
+}
+
 function sair(){
 	navigator.app.exitApp();
 }
@@ -53,16 +75,19 @@ $(document).ready(function(e){
 			$("#tabelaNome").css('display','block');
 			$("#tabelaInicio").css('display','block');
 			$("#tabelaFim").css('display','block');
+			carregarColaboradores();
 		}
 		else if ($("#tipo").val() == "funcao"){
 			$("#tabelaFuncao").css('display','block');
 			$("#tabelaInicio").css('display','block');
 			$("#tabelaFim").css('display','block');
+			carregarFuncoes();
 		}
 		else if ($("#tipo").val() == "set"){ 
 			$("#tabelaSetor").css('display','block');
 			$("#tabelaInicio").css('display','block');
 			$("#tabelaFim").css('display','block');
+			carregarSetores();
 		}
 		else if ($("#tipo").val() == "geral"){
 			$("#tabelaInicio").css('display','block');
@@ -160,6 +185,386 @@ function gerar() {
 		$("#erroFiltroRelatorio").css('display','block');
 	}
 }
+
+//função que gera o relatório por colaborador
+function gerarRelatorioColaborador(id, dataInicial, dataFinal){
+	$('#filtro').css('display','none');
+	$('#resultado').empty();
+	$('#resultado').css('display','block');
+
+	jQuery.ajax({
+	  type: 'POST',
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarDadosRelatorioColaborador.php',
+	  data: {id: id, dataInicial: dataInicial, dataFinal: dataFinal },
+	  dataType: 'jsonp',
+	  crossDomain: true,
+	  jsonp: false,
+	  jsonpCallback: 'callback',
+	  success: function(d) {
+	  	if (d == null){
+			navigator.notification.alert("Nenhum colaborador escalado neste período.", '',  "Erro", "OK");
+		}
+		else {
+			if (d[0].resposta == 'sessaoExpirada'){
+				navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroConexao") {
+				navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroSelecao") {
+				navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroData"){
+				navigator.notification.alert("Formato de data inválido.", '',  "Erro", "OK");
+			}
+			else {
+				//inserção do resultado em uma tabela html
+				html = '<div id="tituloRelatorio2">RELATÓRIO POR COLABORADOR</div>' +
+					   '<div id="nomeRelatorio">Nome: '+d[0].nome.toUpperCase()+'</div>' +
+					   '<div id="cpfRelatorio">CPF: '+d[0].cpf+'</div>' +
+					   '<table id="tabelaRelatorio" class="relatorios">' +
+						 '<tr style="background-color:#0490DC">' +
+						   '<td width="110" align="center"><strong>Data</strong></td>' +
+						   '<td width="70" align="center"><strong>Entrada</strong></td>' +
+						   '<td width="70" align="center"><strong>Saida</strong></td>' +
+						   '<td width="180" align="center"><strong>Função</strong></td>' +
+						   '<td width="130" align="center"><strong>Valor da extra</strong></td>' +
+						 '</tr>';
+				
+				//variável que acumula o total a receber pelo período
+				var total = 0;
+					
+				for(i=0 ; i<d.length ; i++){
+					//calcula o valor da hora
+					valorReceber = parseFloat(d[i].valorReceber);
+					//soma o valor a receber ao total
+					total += valorReceber;
+					
+					if (d[i].funcao == 'Auxiliar de servicos gerais'){
+						funcao = 'Auxiliar de serviços gerais';
+					}
+					else if(d[i].funcao == 'Garcom'){
+						funcao = 'Garçom';
+					}
+					else{
+						funcao = d[i].funcao;
+					}
+					
+					html += '<tr>' +
+							  '<td align="center">'+d[i].data+'</td>' +
+							  '<td align="center">'+d[i].entrada.substr(0,5)+'</td>' +
+							  '<td align="center">'+d[i].saida.substr(0,5)+'</td>' +
+							  '<td align="center">'+funcao+'</td>' +
+							  '<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+							'</tr>';
+				}
+				html += '<tr style="background-color:#979797">' +
+						  '<td align="center"><strong>Total</strong></td>' +
+						  '<td align="center">&nbsp;</td>' +
+						  '<td align="center">&nbsp;</td>' +
+						  '<td align="center">&nbsp;</td>' +
+						  '<td align="right"><strong>'+FloatParaTexto(total.toString())+'</strong></td>' +
+						'</tr>' + 
+						'</table>';
+
+				$('#resultado').append(html);
+			}
+		}
+	  }
+	});
+}
+
+//função que gera o relatório por função
+function gerarRelatorioFuncao(funcao, dataInicial, dataFinal){
+	$('#filtro').css('display','none');
+	$('#resultado').empty();
+	$('#resultado').css('display','block');
+
+	jQuery.ajax({
+	  type: 'POST',
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarDadosRelatorioFuncao.php',
+	  data: {funcao: funcao, dataInicial: dataInicial, dataFinal: dataFinal },
+	  dataType: 'jsonp',
+	  crossDomain: true,
+	  jsonp: false,
+	  jsonpCallback: 'callback',
+	  success: function(d) {
+	  	if (d == null){
+			navigator.notification.alert("Nenhum colaborador escalado neste período.", '',  "Erro", "OK");
+		}
+		else {
+			if (d[0].resposta == 'sessaoExpirada'){
+				navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroConexao") {
+				navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroSelecao") {
+				navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroData"){
+				navigator.notification.alert("Formato de data inválido.", '',  "Erro", "OK");
+			}
+			else {
+				if (funcao == 'Auxiliar de servicos gerais'){
+					funcao = 'Auxiliar de serviços gerais';
+				}
+				else if(funcao == 'Garcom'){
+					funcao = 'Garçom';
+				}
+				else if(funcao == 'Garcom exclusivo'){
+					funcao = 'Garçom exclusivo';
+				}
+
+				//inserção do resultado em uma tabela html
+				html = '<div id="tituloRelatorio2">RELATÓRIO POR FUNÇÃO</div>' +
+					   '<div id="nomeRelatorio">Função: '+funcao+'</div>' +
+					   '<div id="cpfRelatorio">Período: '+dataInicial+' a '+dataFinal+'</div>' +
+					   '<table id="tabelaRelatorio" class="relatorios">';
+
+				//variável que acumula o total a receber pelo período
+				var totalReceber = 0;
+				//variável que acumula o total a pagar pelo período
+				var totalPagar = 0;
+				
+				dataAnterior = ''; //usada para guardar a data utilizada no laço anterior
+				horaEntradaAnterior = ''; //usada para guardar o horário utilizado no laço anterior
+				horaSaidaAnterior = '';
+				contColab = 0; //contador dos colaboradores
+
+				for(i=0 ; i<d.length ; i++){
+					//calcula o valor da hora a receber
+					valorReceber = parseFloat(d[i].valorReceber);
+					//calcula o valor da hora a pagar
+					valorPagar = parseFloat(d[i].valorPagar);
+					//os totais são acumulados
+					totalReceber += valorReceber;
+					totalPagar += valorPagar;
+					
+					if (dataAnterior == '' && horaEntradaAnterior == '' && horaSaidaAnterior == ''){
+						contColab++;
+						dataAnterior = d[i].data;
+						horaEntradaAnterior = d[i].entrada;
+						horaSaidaAnterior = d[i].saida;
+						html += '<tr>' +
+									'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>Dia '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
+								'</tr>' +
+								'<tr style="background-color:#CCC">' +
+									'<td width="50" align="center"><strong>Qtd</strong></td>' +
+									'<td width="400" align="center"><strong>Colaborador</strong></td>' +
+									'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
+									'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
+								'</tr>' +
+								'<tr>' +
+									'<td align="center">'+contColab+'</td>' +
+									'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+								'</tr>'; 
+					}
+					else if (dataAnterior == d[i].data){ 
+						if (horaEntradaAnterior == d[i].entrada && horaSaidaAnterior == d[i].saida){
+							contColab++;
+							html += '<tr>' +
+										'<td align="center">'+contColab+'</td>' +
+										'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+										'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+										'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+									'</tr>';
+						}
+						else{
+							contColab = 1;
+							horaEntradaAnterior = d[i].entrada;
+							horaSaidaAnterior = d[i].saida;
+							html += '<tr>' +
+										'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>Dia '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
+									'</tr>' +
+									'<tr style="background-color:#CCC">' +
+										'<td width="50" align="center"><strong>Qtd</strong></td>' +
+										'<td width="400" align="center"><strong>Colaborador</strong></td>' +
+										'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
+										'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
+									'</tr>' +
+									'<tr>' +
+										'<td align="center">'+contColab+'</td>' +
+										'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+										'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+										'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+									'</tr>';
+						}
+					}
+					else{
+						contColab = 1;
+						dataAnterior = d[i].data;
+						horaEntradaAnterior = d[i].entrada;
+						horaSaidaAnterior = d[i].saida;
+						html += '<tr>' +
+									'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>Dia '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
+								'</tr>' +
+								'<tr style="background-color:#CCC">' +
+									'<td width="50" align="center"><strong>Qtd</strong></td>' +
+									'<td width="400" align="center"><strong>Colaborador</strong></td>' +
+									'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
+									'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
+								'</tr>' +
+								'<tr>' +
+									'<td align="center">'+contColab+'</td>' +
+									'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+								'</tr>';
+					}
+				}
+				html += '<tr style="background-color:#979797">' +
+						  '<td align="center"><strong>Total</strong></td>' +
+						  '<td align="left">&nbsp;</td>' +
+						  '<td align="right"><strong>'+FloatParaTexto(totalReceber.toString())+'</strong></td>' +
+						  '<td align="right"><strong>'+FloatParaTexto(totalPagar.toString())+'</strong></td>' +
+						'</tr>' + 
+						'</table>';
+				
+				$('#resultado').append(html);
+
+			}
+		}
+	  }
+	});
+}
+
+//função que gera o relatório por setor
+function gerarRelatorioSetor(setor, dataInicial, dataFinal){
+	$('#filtro').css('display','none');
+	$('#resultado').empty();
+	$('#resultado').css('display','block');
+
+	jQuery.ajax({
+	  type: 'POST',
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarDadosRelatorioSetor.php',
+	  data: {setor: setor, dataInicial: dataInicial, dataFinal: dataFinal },
+	  dataType: 'jsonp',
+	  crossDomain: true,
+	  jsonp: false,
+	  jsonpCallback: 'callback',
+	  success: function(d) {
+	  	if (d == null){
+			navigator.notification.alert("Nenhum colaborador escalado neste período.", '',  "Erro", "OK");
+		}
+		else {
+			if (d[0].resposta == 'sessaoExpirada'){
+				navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroConexao") {
+				navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroSelecao") {
+				navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
+			}
+			else if (d[0].resposta == "erroData"){
+				navigator.notification.alert("Formato de data inválido.", '',  "Erro", "OK");
+			}
+			else {
+				//inserção do resultado em uma tabela html
+				html = '<div id="tituloRelatorio2">RELATÓRIO POR SETOR</div>' +
+					   '<div id="nomeRelatorio">Setor: '+setor+'</div>' +
+					   '<div id="cpfRelatorio">Período: '+dataInicial+' a '+dataFinal+'</div>' +
+					   '<table id="tabelaRelatorio" class="relatorios">';
+
+				//variável que acumula o total a receber pelo período
+				var totalReceber = 0;
+				//variável que acumula o total a pagar pelo período
+				var totalPagar = 0;
+				
+				funcaoAnterior = ''; //usada para guardar a função utilizada no laço anterior
+				dataAnterior = ''; //usada para guardar a data utilizada no laço anterior
+				horaEntradaAnterior = ''; //usada para guardar o horário utilizado no laço anterior
+				horaSaidaAnterior = '';
+				contColab = 0; //contador dos colaboradores
+				
+				for(i=0 ; i<d.length ; i++){
+					//calcula o valor da hora a receber
+					valorReceber = parseFloat(d[i].valorReceber);
+					//calcula o valor da hora a pagar
+					valorPagar = parseFloat(d[i].valorPagar);
+					//os totais são acumulados
+					totalReceber += valorReceber;
+					totalPagar += valorPagar;
+					
+					if (funcaoAnterior == '' && dataAnterior == '' && horaEntradaAnterior == '' && horaSaidaAnterior == ''){
+						contColab++; 
+						funcaoAnterior = d[i].funcao;
+						dataAnterior = d[i].data;
+						horaEntradaAnterior = d[i].entrada;
+						horaSaidaAnterior = d[i].saida;
+						html += '<tr>' +
+									'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>'+d[i].funcao.toUpperCase()+' - '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
+								'</tr>' +
+								'<tr style="background-color:#CCC">' +
+									'<td width="50" align="center"><strong>Qtd</strong></td>' +
+									'<td width="400" align="center"><strong>Colaborador</strong></td>' +
+									'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
+									'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
+								'</tr>' +
+								'<tr>' +
+									'<td align="center">'+contColab+'</td>' +
+									'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+								'</tr>'; 
+					}
+					else if (funcaoAnterior == d[i].funcao && dataAnterior == d[i].data && horaEntradaAnterior == d[i].entrada && horaSaidaAnterior == d[i].saida){
+
+								contColab++; 
+								html += '<tr>' +
+											'<td align="center">'+contColab+'</td>' +
+											'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+											'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+											'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+										'</tr>';
+
+
+
+					}
+					else{
+						contColab = 1;
+						funcaoAnterior = d[i].funcao;
+						dataAnterior = d[i].data;
+						horaEntradaAnterior = d[i].entrada;
+						horaSaidaAnterior = d[i].saida;
+						html += '<tr>' +
+									'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>'+d[i].funcao.toUpperCase()+' - '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
+								'</tr>' +
+								'<tr style="background-color:#CCC">' +
+									'<td width="50" align="center"><strong>Qtd</strong></td>' +
+									'<td width="400" align="center"><strong>Colaborador</strong></td>' +
+									'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
+									'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
+								'</tr>' +
+								'<tr>' +
+									'<td align="center">'+contColab+'</td>' +
+									'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
+									'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
+								'</tr>';
+					}
+				}
+				html += '<tr style="background-color:#979797">' +
+						  '<td align="center"><strong>Total</strong></td>' +
+						  '<td align="left">&nbsp;</td>' +
+						  '<td align="right"><strong>'+FloatParaTexto(totalReceber.toString())+'</strong></td>' +
+						  '<td align="right"><strong>'+FloatParaTexto(totalPagar.toString())+'</strong></td>' +
+						'</tr>' + 
+						'</table>';
+				
+				$('#resultado').append(html);
+
+			}
+		}
+	  }
+	});
+}
+
+
+
 
 //função que gera o relatório geral
 function gerarRelatorioGeral(dataIni, dataFim){
@@ -448,158 +853,91 @@ function gerarRelatorioGeral(dataIni, dataFim){
 	});
 }
 
-//função que gera o relatório por função
-function gerarRelatorioFuncao(funcao, dataInicial, dataFinal){
-	$('#filtro').css('display','none');
-	$('#resultado').empty();
-	$('#resultado').css('display','block');
-
+function carregarFuncoes(){ 
+	$('#funcao').empty(); //limpa o select
+	var html = '<option value="" selected="selected"></option>';
 	jQuery.ajax({
 	  type: 'POST',
-	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarDadosRelatorioFuncao.php',
-	  data: {funcao: funcao, dataInicial: dataInicial, dataFinal: dataFinal },
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarFuncoes.php',
 	  dataType: 'jsonp',
 	  crossDomain: true,
 	  jsonp: false,
 	  jsonpCallback: 'callback',
 	  success: function(d) {
-	  	if (d == null){
-			navigator.notification.alert("Nenhum colaborador escalado neste período.", '',  "Erro", "OK");
+	  	if (d[0].resposta == 'sessaoExpirada'){
+			navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+		}
+		else if (d[0].resposta == "erroConexao") {
+			navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
+		}
+		else if (d[0].resposta == "erroSelecao") {
+			navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
 		}
 		else {
-			if (d[0].resposta == 'sessaoExpirada'){
-				navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+			for(i=0 ; i<d.length ; i++){
+				html += '<option value="'+d[i]+'">'+d[i]+'</option>';	
 			}
-			else if (d[0].resposta == "erroConexao") {
-				navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
-			}
-			else if (d[0].resposta == "erroSelecao") {
-				navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
-			}
-			else if (d[0].resposta == "erroData"){
-				navigator.notification.alert("Formato de data inválido.", '',  "Erro", "OK");
-			}
-			else {
-				if (funcao == 'Auxiliar de servicos gerais'){
-					funcao = 'Auxiliar de serviços gerais';
-				}
-				else if(funcao == 'Garcom'){
-					funcao = 'Garçom';
-				}
-				else if(funcao == 'Garcom exclusivo'){
-					funcao = 'Garçom exclusivo';
-				}
+			$('#funcao').append(html); //adiciona as opções ao select
+		}
+	  }
+	});
+}
 
-				//inserção do resultado em uma tabela html
-				html = '<div id="tituloRelatorio2">RELATÓRIO POR FUNÇÃO</div>' +
-					   '<div id="nomeRelatorio">Função: '+funcao+'</div>' +
-					   '<div id="cpfRelatorio">Período: '+dataInicial+' a '+dataFinal+'</div>' +
-					   '<table id="tabelaRelatorio" class="relatorios">';
-
-				//variável que acumula o total a receber pelo período
-				var totalReceber = 0;
-				//variável que acumula o total a pagar pelo período
-				var totalPagar = 0;
-				
-				dataAnterior = ''; //usada para guardar a data utilizada no laço anterior
-				horaEntradaAnterior = ''; //usada para guardar o horário utilizado no laço anterior
-				horaSaidaAnterior = '';
-				contColab = 0; //contador dos colaboradores
-
-				for(i=0 ; i<d.length ; i++){
-					//calcula o valor da hora a receber
-					valorReceber = parseFloat(d[i].valorReceber);
-					//calcula o valor da hora a pagar
-					valorPagar = parseFloat(d[i].valorPagar);
-					//os totais são acumulados
-					totalReceber += valorReceber;
-					totalPagar += valorPagar;
-					
-					if (dataAnterior == '' && horaEntradaAnterior == '' && horaSaidaAnterior == ''){
-						contColab++;
-						dataAnterior = d[i].data;
-						horaEntradaAnterior = d[i].entrada;
-						horaSaidaAnterior = d[i].saida;
-						html += '<tr>' +
-									'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>Dia '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
-								'</tr>' +
-								'<tr style="background-color:#CCC">' +
-									'<td width="50" align="center"><strong>Qtd</strong></td>' +
-									'<td width="400" align="center"><strong>Colaborador</strong></td>' +
-									'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
-									'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
-								'</tr>' +
-								'<tr>' +
-									'<td align="center">'+contColab+'</td>' +
-									'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
-									'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
-									'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
-								'</tr>'; 
-					}
-					else if (dataAnterior == d[i].data){ 
-						if (horaEntradaAnterior == d[i].entrada && horaSaidaAnterior == d[i].saida){
-							contColab++;
-							html += '<tr>' +
-										'<td align="center">'+contColab+'</td>' +
-										'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
-										'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
-										'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
-									'</tr>';
-						}
-						else{
-							contColab = 1;
-							horaEntradaAnterior = d[i].entrada;
-							horaSaidaAnterior = d[i].saida;
-							html += '<tr>' +
-										'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>Dia '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
-									'</tr>' +
-									'<tr style="background-color:#CCC">' +
-										'<td width="50" align="center"><strong>Qtd</strong></td>' +
-										'<td width="400" align="center"><strong>Colaborador</strong></td>' +
-										'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
-										'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
-									'</tr>' +
-									'<tr>' +
-										'<td align="center">'+contColab+'</td>' +
-										'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
-										'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
-										'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
-									'</tr>';
-						}
-					}
-					else{
-						contColab = 1;
-						dataAnterior = d[i].data;
-						horaEntradaAnterior = d[i].entrada;
-						horaSaidaAnterior = d[i].saida;
-						html += '<tr>' +
-									'<td colspan="4" align="center" style="background-color:#FF0; font-style:italic"><strong>Dia '+d[i].data+' - das '+d[i].entrada.substr(0,5)+'hs às '+d[i].saida.substr(0,5)+'hs</strong></td>' +
-								'</tr>' +
-								'<tr style="background-color:#CCC">' +
-									'<td width="50" align="center"><strong>Qtd</strong></td>' +
-									'<td width="400" align="center"><strong>Colaborador</strong></td>' +
-									'<td width="150" align="center"><strong>Valor da extra a receber</strong></td> ' +
-									'<td width="150" align="center"><strong>Valor da extra a pagar</strong></td> ' +
-								'</tr>' +
-								'<tr>' +
-									'<td align="center">'+contColab+'</td>' +
-									'<td align="left">'+d[i].nome.toUpperCase()+'</td>' +
-									'<td align="right">'+FloatParaTexto(valorReceber.toString())+'</td>' +
-									'<td align="right">'+FloatParaTexto(valorPagar.toString())+'</td>' +
-								'</tr>';
-					}
-				}
-				html += '<tr style="background-color:#979797">' +
-						  '<td align="center"><strong>Total</strong></td>' +
-						  '<td align="left">&nbsp;</td>' +
-						  '<td align="right"><strong>'+FloatParaTexto(totalReceber.toString())+'</strong></td>' +
-						  '<td align="right"><strong>'+FloatParaTexto(totalPagar.toString())+'</strong></td>' +
-						'</tr>' + 
-						'</table>';
-				
-				$('#resultado').append(html);
-
+function carregarSetores(){ 
+	$('#setor').empty(); //limpa o select
+	var html = '<option value="" selected="selected"></option>';
+	jQuery.ajax({
+	  type: 'POST',
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarSetores.php',
+	  dataType: 'jsonp',
+	  crossDomain: true,
+	  jsonp: false,
+	  jsonpCallback: 'callback',
+	  success: function(d) {
+	  	if (d[0].resposta == 'sessaoExpirada'){
+			navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+		}
+		else if (d[0].resposta == "erroConexao") {
+			navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
+		}
+		else if (d[0].resposta == "erroSelecao") {
+			navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
+		}
+		else {
+			for(i=0 ; i<d.length ; i++){
+				html += '<option value="'+d[i]+'">'+d[i]+'</option>';	
 			}
+			$('#setor').append(html); //adiciona as opções ao select
+		}
+	  }
+	});
+}
+
+function carregarColaboradores(){ 
+	$('#nome').empty(); //limpa o select
+	var html = '<option value="" selected="selected"></option>';
+	jQuery.ajax({
+	  type: 'POST',
+	  url: 'http://www.excelservices.com.br/sistema/mvc/controler-mobile/carregarColaboradores.php',
+	  dataType: 'jsonp',
+	  crossDomain: true,
+	  jsonp: false,
+	  jsonpCallback: 'callback',
+	  success: function(d) {
+	  	if (d[0].resposta == 'sessaoExpirada'){
+			navigator.notification.alert("Sessão expirada. Por favor, reinicie o aplicativo.", '',  "Erro", "OK");
+		}
+		else if (d[0].resposta == "erroConexao") {
+			navigator.notification.alert("A conexão não pode ser estabelecida.", '',  "Erro", "OK");
+		}
+		else if (d[0].resposta == "erroSelecao") {
+			navigator.notification.alert("Erro desconhecido ao selecionar o banco de dados.", '',  "Erro", "OK");
+		}
+		else {
+			for(i=0 ; i<d.length ; i++){
+				html += '<option value="'+d[i].id+'">'+d[i].nome+'</option>';	
+			}
+			$('#nome').append(html); //adiciona as opções ao select
 		}
 	  }
 	});
